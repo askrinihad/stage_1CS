@@ -130,7 +130,6 @@ const styles = StyleSheet.create({
     position: 'relative',
     top: '10%',
     justifyContent: 'center',
-    // left:100,
     borderRadius: 8,
     alignItems: 'center',
     backgroundColor: 'white',

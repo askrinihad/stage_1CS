@@ -67,16 +67,16 @@ export default class ListDerang extends Component {
   renderDrawer() {
     //slideMenu
     return (
-      <View style={{flex: 1}}>
+      <View style={{flex: 1, flexDirection: 'row'}}>
         <FlatList
           style={styles.menu}
           style={{flex: 1}}
           data={[
-            {key: 'Ajouter PC'},
-            {key: 'Connaître état PC'},
-            {key: 'Changer état pair'},
-            {key: 'Dérangements urgents'},
-            {key: 'Déconnecter'},
+            {key: 'Ajouter PC', icon: 'plus-square'},
+            {key: 'Connaître état PC', icon: 'desktop'},
+            {key: 'Changer état pair', icon: 'undo'},
+            {key: 'Dérangements urgents', icon: 'bell'},
+            {key: 'Déconnecter', icon: 'sign-out'},
           ]}
           renderItem={({item}) => (
             <TouchableOpacity
@@ -89,7 +89,9 @@ export default class ListDerang extends Component {
                   );
                 } else {
                   if (item.key === 'Ajouter PC') {
-                    this.props.history.push('/AjouterPc');
+                    this.props.history.push(
+                      '/AjouterPc/' + this.props.match.params.compte,
+                    );
                   } else {
                     if (item.key === 'Changer état pair') {
                       this.props.history.push('/ChangerEtatPair');
@@ -105,6 +107,7 @@ export default class ListDerang extends Component {
                   }
                 }
               }}>
+              <Icon name={item.icon} color="white" size={20} />
               <Text style={styles.item}>{item.key}</Text>
             </TouchableOpacity>
           )}
@@ -196,7 +199,7 @@ const styles = StyleSheet.create({
   },
   item: {
     padding: 10,
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: 'bold',
     fontFamily: 'sans-serif-light',
     height: 44,
@@ -204,7 +207,8 @@ const styles = StyleSheet.create({
   },
   menuStyle: {
     flex: 1,
-    justifyContent: 'center',
+    alignItems: 'center',
+    left: '15%',
     flexDirection: 'row',
     height: 70,
     backgroundColor: '#27B8B8',
@@ -246,7 +250,7 @@ const styles = StyleSheet.create({
   },
   separatorDrawerStyle: {
     height: 0.5,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#2AC9BF',
   },
   footer: {
     width: '100%',

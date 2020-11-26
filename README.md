@@ -15,6 +15,7 @@ In the command line :
   npm i react-native-elements --save
   npm install react-native-vector-icons --save
   npx react-native link react-native-vector-icons
+
   - npm install react-native-paper --save
     to use router:
     npm react-router-native
@@ -24,5 +25,13 @@ In the command line :
     npm install react-native-reanimated
     npm install react-native-screens
     npm install react-navigation-drawer
-    npm install --save react-native-material-dropdown
-    npm i react-native-dropdown-menu
+    npm install @react-native-community/picker --save
+    npm i react-native-paper
+    avoid keyboard pushing layout app on android react native:
+    in the file AndroidManifest.xml :
+    replace: android:windowSoftInputMode="adjustResize"
+    to: android:windowSoftInputMode="adjustPan"
+    in the terminal:
+    cd android
+
+    npm i react-native-simple-radio-button --save
