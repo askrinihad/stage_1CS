@@ -31,7 +31,7 @@ export default class ListDerang extends Component {
         style={styles.listStyle}
         onPress={() =>
           this.props.history.push('/InfoDerang', {
-            compte: this.props.match.params.compte,
+            compte: this.props.location.state.compte,
             titre: item.titre,
           })
         }>
@@ -81,23 +81,27 @@ export default class ListDerang extends Component {
           renderItem={({item}) => (
             <TouchableOpacity
               style={styles.menuStyle}
-              // onPress={() => this.props.history.push('/EtatPc')}
               onPress={() => {
                 if (item.key === 'Connaître état PC') {
-                  this.props.history.push(
-                    '/EtatPc/' + this.props.match.params.compte,
-                  );
+                  this.props.history.push('/EtatPc', {
+                    compte: this.props.location.state.compte,
+                  });
                 } else {
                   if (item.key === 'Ajouter PC') {
-                    this.props.history.push(
-                      '/AjouterPc/' + this.props.match.params.compte,
-                    );
+                    this.props.history.push('/AjouterPc', {
+                      compte: this.props.location.state.compte,
+                    });
                   } else {
                     if (item.key === 'Changer état pair') {
-                      this.props.history.push('/ChangerEtatPair');
+                      this.props.history.push('/ChangerEtatPair', {
+                        compte: this.props.location.state.compte,
+                        etatPair: true,
+                      });
                     } else {
                       if (item.key === 'Dérangements urgents') {
-                        this.props.history.push('/DerangUrgent');
+                        this.props.history.push('/DerangUrgent', {
+                          compte: this.props.location.state.compte,
+                        });
                       } else {
                         if (item.key === 'Déconnecter') {
                           this.props.history.push('/');
@@ -130,7 +134,7 @@ export default class ListDerang extends Component {
   componentDidMount() {
     fetch(
       'http://172.20.10.11:5000/derangement/afficherAttente/mobile/' +
-        this.props.match.params.compte,
+        this.props.location.state.compte,
     )
       .then((response) => response.json())
       .then((responseData) => {
@@ -217,7 +221,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     flexDirection: 'row',
-
     backgroundColor: '#FFFFFF',
     borderRadius: 7,
     shadowOffset: {

@@ -28,7 +28,7 @@ export default class ChangerEtatPair extends Component {
   ///////////////////////
   //////////les fonctions
   setPicker = (item, index) => {
-    this.setState({pc: item});
+    this.setState({pc: item, id: item._id});
   };
   ///////////////////////////////////////////////
   renderListPc = () => {
@@ -96,9 +96,9 @@ export default class ChangerEtatPair extends Component {
           <View style={styles.header}>
             <TouchableOpacity
               onPress={() =>
-                this.props.history.push(
-                  '/ListDerang/' + this.props.match.params.compte,
-                )
+                this.props.history.push('/ListDerang', {
+                  compte: this.props.location.state.compte,
+                })
               }>
               <Icon name="chevron-left" color="white" size={24} />
             </TouchableOpacity>
@@ -134,11 +134,11 @@ export default class ChangerEtatPair extends Component {
         <View style={{backgroundColor: '#F8F8F8', height: '100%'}}>
           <View style={styles.header}>
             <TouchableOpacity
-              onPress={() =>
-                this.props.history.push(
-                  '/ListDerang/' + this.props.match.params.compte,
-                )
-              }>
+              onPress={() => {
+                this.props.history.push('/ListDerang', {
+                  compte: this.props.location.state.compte,
+                });
+              }}>
               <Icon name="chevron-left" color="white" size={24} />
             </TouchableOpacity>
           </View>

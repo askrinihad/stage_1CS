@@ -8,12 +8,17 @@ import {
   Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {request, PERMISSIONS} from 'react-native-permissions';
+import Geolocation from '@react-native-community/geolocation'; //to use geolocalisation
 export default class AjouterPc extends Component {
   constructor(props) {
     super(props);
     this.state = {
       tete: '',
-      pair: [],
+      pair1: [],
+      pair2: [],
+      pair3: [],
+      pair4: [],
       groupe: 0,
       amorce: 0,
       latitude: 0,
@@ -32,55 +37,92 @@ export default class AjouterPc extends Component {
     ) {
       Alert.alert('Error', 'veuillez remplir tous les champs');
     } else {
-      Alert.alert(
-        'Confirmation',
-        "Est que vous êtes à l'emplacement exact du PC ?",
-        [
-          {
-            text: 'Oui',
-            onPress: () => {
-              fetch('http://172.20.10.11:5000/pc/entrerCoordonnee/mob', {
-                method: 'POST',
-                headers: {
-                  Accept: 'application/json',
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  tete: this.state.tete,
-                  groupe: this.state.groupe,
-                  amorce: this.state.amorce,
-                  latitude: this.state.latitude,
-                  longitude: this.state.longitude,
-                  pair: this.state.pair,
-                  nbrPairMax: this.state.nbrPairMax,
-                  nbrPairOccupe: this.state.nbrPairOccupe,
-                  compte: this.props.match.params.compte,
-                }),
-              })
-                .then((response) => response.json())
-                .then((responseData) => {
-                  Alert.alert(responseData.message);
-                })
-                .catch((error) => {
-                  console.log(error);
-                });
+      if (this.state.nbrPairMax != 28 && this.state.nbrPairMax != 14) {
+        Alert.alert('Error', 'le nombre maximum de pair doit être 14 ou 28');
+      } else {
+        Alert.alert(
+          'Confirmation',
+          "Est que vous êtes à l'emplacement exact du PC ?",
+          [
+            {
+              text: 'Oui',
+              onPress: () => {
+                for (var i = 0; i < 7; i++) {
+                  this.setState({pair1: [...this.state.pair1, 0]});
+                }
+                for (var i = 0; i < 7; i++) {
+                  this.setState({pair2: [...this.state.pair2, 0]});
+                }
+                if (this.state.nbrPairMax > 14) {
+                  for (var i = 0; i < 7; i++) {
+                    this.setState({pair3: [...this.state.pair3, 0]});
+                  }
+                  for (var i = 0; i < 7; i++) {
+                    this.setState({pair4: [...this.state.pair4, 0]});
+                  }
+                }
+                this.requestLocationPermission();
+              },
             },
-          },
-          {
-            text: 'Non',
-            onPress: () =>
-              Alert.alert(
-                '',
-                "veuillez vous déplacer à l'emplacement exact du PC",
-              ),
-            style: 'cancel',
-          },
-        ],
-        {cancelable: false},
-      );
+            {
+              text: 'Non',
+              onPress: () =>
+                Alert.alert(
+                  '',
+                  "veuillez vous déplacer à l'emplacement exact du PC",
+                ),
+              style: 'cancel',
+            },
+          ],
+          {cancelable: false},
+        );
+      }
     }
   };
   ///////////////////////////////////////////
+  requestLocationPermission = async () => {
+    if (Platform.OS === '') {
+      var response = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+      console.log('iPhone:' + response);
+      if (response === 'granted') {
+        this.locateCurrentPosition();
+      }
+    }
+    //android mobile
+    else {
+      var response = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+      console.log('Android:' + response);
+      if (response === 'granted') {
+        this.locateCurrentPosition();
+      }
+    }
+  };
+  ///////////////////////////////////////
+  //function to get current location
+  locateCurrentPosition = () => {
+    Geolocation.getCurrentPosition(
+      (position) => {
+        //stringify: is how to vue an object as a string
+        console.log(JSON.stringify(position));
+        this.props.history.push('/ajoutPair', {
+          tete: this.state.tete,
+          groupe: this.state.groupe,
+          amorce: this.state.amorce,
+          nbrPairMax: this.state.nbrPairMax,
+          pair1: this.state.pair1,
+          pair2: this.state.pair2,
+          pair3: this.state.pair3,
+          pair4: this.state.pair4,
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          compte: this.props.location.state.compte,
+        });
+      },
+      (error) => Alert.alert(error.message),
+      {enableHighAccuracy: true, timeout: 10000, maximumAge: 1000},
+    );
+  };
+  ////////////////////////
 
   render() {
     return (
@@ -89,9 +131,9 @@ export default class AjouterPc extends Component {
           <TouchableOpacity
             onPress={() => {
               console.log(this.props.location.state.compte);
-              this.props.history.push(
-                '/ListDerang/' + this.props.match.params.compte,
-              );
+              this.props.history.push('/ListDerang', {
+                compte: this.props.location.state.compte,
+              });
             }}>
             <Icon name="chevron-left" color="white" size={24} />
           </TouchableOpacity>
@@ -117,7 +159,7 @@ export default class AjouterPc extends Component {
           />
           <TextInput
             style={styles.input}
-            placeholder="Le nombre max de pair"
+            placeholder="Le nombre max de pair (14 ou 28)"
             keyboardType="numeric"
             onChangeText={(text) => this.setState({nbrPairMax: text})}
           />

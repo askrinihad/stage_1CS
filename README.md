@@ -35,3 +35,15 @@ In the command line :
     cd android
 
     npm i react-native-simple-radio-button --save
+
+    to use map:
+    npm install --save react-native-permissions
+    npm install react-native-maps --save
+    in the AndroidManifest.xml file add the following lines:
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /><!-- allow the app to get your current location -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <meta-data
+     android:name="com.google.android.geo.API_KEY"
+     android:value="your key"/>

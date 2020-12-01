@@ -5,7 +5,10 @@ import {
   StyleSheet,
   ScrollView,
   Text,
+  Alert,
 } from 'react-native';
+import {request, PERMISSIONS} from 'react-native-permissions';
+import Geolocation from '@react-native-community/geolocation';
 import {Menu, Divider, Provider, DefaultTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -13,6 +16,7 @@ class InfoDeran extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      id: '',
       titre: 'complaint1320',
       dateSigna: '2020-11-01T00:00:00.000Z',
       dateLimit: '2020-11-01T00:00:00.000Z',
@@ -37,6 +41,44 @@ class InfoDeran extends Component {
   //////////////////////les fonctions//////////////////////////////
   openMenu = () => this.setState({visible: true});
   closeMenu = () => this.setState({visible: false});
+  ////////////////////////////
+  requestLocationPermission = async () => {
+    if (Platform.OS === '') {
+      var response = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+      console.log('iPhone:' + response);
+      if (response === 'granted') {
+        this.locateCurrentPosition();
+      }
+    }
+    //android mobile
+    else {
+      var response = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+      console.log('Android:' + response);
+      if (response === 'granted') {
+        this.locateCurrentPosition();
+      }
+    }
+  };
+  ///////////////////////////////////////
+  //function to get current location
+  locateCurrentPosition = () => {
+    Geolocation.getCurrentPosition(
+      (position) => {
+        //stringify: is how to vue an object as a string
+        console.log(JSON.stringify(position));
+        this.props.history.push('/LocaliserPc', {
+          titre: this.props.location.state.titre,
+          tete: this.state.constitutionTete,
+          groupe: this.state.constitutionGroupe,
+          amorce: this.state.constitutionAmorce,
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+      },
+      (error) => Alert.alert(error.message),
+      {enableHighAccuracy: true, timeout: 10000, maximumAge: 1000},
+    );
+  };
   ////////////////////////////////////////////////////////////////
   componentDidMount() {
     fetch(
@@ -47,6 +89,7 @@ class InfoDeran extends Component {
       .then((responseData) => {
         console.log(responseData);
         this.setState((prevState) => ({
+          id: responseData[0]._id,
           titre: responseData[0].titre,
           dateSigna: responseData[0].dateSignal,
           dateLimit: responseData[0].dateLimit,
@@ -74,19 +117,18 @@ class InfoDeran extends Component {
   render() {
     return (
       <View style={{flex: 1}}>
-        <View style={styles.header}>
-          <TouchableOpacity
-            style={styles.ChevronIcon}
-            onPress={() => {
-              console.log(this.props.location.state.compte);
-              this.props.history.push(
-                '/ListDerang/' + this.props.location.state.compte,
-              );
-            }}>
-            <Icon name="chevron-left" color="white" size={24} />
-          </TouchableOpacity>
+        <Provider theme={DefaultTheme}>
+          <View style={styles.header}>
+            <TouchableOpacity
+              style={styles.ChevronIcon}
+              onPress={() => {
+                this.props.history.push('/ListDerang', {
+                  compte: this.props.location.state.compte,
+                });
+              }}>
+              <Icon name="chevron-left" color="white" size={24} />
+            </TouchableOpacity>
 
-          <Provider theme={DefaultTheme}>
             <Menu
               style={styles.menu}
               visible={this.state.visible}
@@ -101,19 +143,44 @@ class InfoDeran extends Component {
                   />
                 </TouchableOpacity>
               }>
-              <Menu.Item onPress={() => {}} title="Localiser le PC" />
-              <Divider />
-              <Menu.Item onPress={() => {}} title="Changer l’état d’un pair" />
+              <Menu.Item
+                onPress={() => {
+                  this.props.history.push('/ChangerEtatPair', {
+                    titre: this.props.location.state.titre,
+                    etatPair: false,
+                  });
+                }}
+                title="Changer l’état d’un pair"
+              />
               <Divider />
               <Menu.Item
-                onPress={() => {}}
+                onPress={() => {
+                  this.requestLocationPermission();
+                  /*   this.props.history.push('/LocaliserPc', {
+                    titre: this.props.location.state.titre,
+                    tete: this.state.constitutionTete,
+                    groupe: this.state.constitutionGroupe,
+                    amorce: this.state.constitutionAmorce,
+                  }); */
+                }}
+                title="Localiser le PC"
+              />
+              <Divider />
+              <Menu.Item
+                onPress={() =>
+                  this.props.history.push('/ChangerEtatDer/', {
+                    titre: this.props.location.state.titre,
+                    compte: this.props.location.state.compte,
+                    id: this.state.id,
+                    nbVisite: this.state.nbVisite,
+                  })
+                }
                 title="Changer l’état du derangement"
               />
             </Menu>
-          </Provider>
-        </View>
-        <View style={styles.info}>
-          <ScrollView>
+          </View>
+
+          <ScrollView style={styles.info}>
             <Text></Text>
             <Text style={styles.titre}>Titre:</Text>
             <Text style={styles.champs}>{this.state.titre}</Text>
@@ -151,7 +218,7 @@ class InfoDeran extends Component {
             <Text style={styles.champs}>{this.state.nbVisite}</Text>
             <Text></Text>
           </ScrollView>
-        </View>
+        </Provider>
       </View>
     );
   }
@@ -170,8 +237,8 @@ const styles = StyleSheet.create({
     left: '90%',
   },
   menu: {
-    top: '18%',
-    left: '29%',
+    top: '3%',
+    left: '38%',
   },
   info: {
     left: '5%',

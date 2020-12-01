@@ -43,7 +43,9 @@ class Login extends Component {
           if (responseJson.compte === '') {
             Alert.alert(responseJson.message);
           } else {
-            this.props.history.push('/ListDerang/' + responseJson.compte);
+            this.props.history.push('/ListDerang', {
+              compte: responseJson.compte,
+            });
           }
         });
     }
@@ -74,6 +76,7 @@ class Login extends Component {
             <TextInput
               style={styles.input}
               placeholder="mot de passe"
+              secureTextEntry={true}
               placeholderTextColor="#E2F7F3"
               onChangeText={(text) => this.setState({password: text})}
             />
