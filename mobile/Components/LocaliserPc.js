@@ -29,12 +29,23 @@ export default class LocaliserPc extends Component {
   /*-----------les fonctions-------------*/
   showIdPc = () => {
     Alert.alert(
-      'Welcom to San Francisco',
-      'The food is amazing',
-      //our buttons which are an array
+      '' +
+        this.props.location.state.tete +
+        '-' +
+        this.props.location.state.groupe +
+        '-' +
+        this.props.location.state.amorce,
       [
         {
           text: 'Ok',
+        },
+        {
+          text: 'Voir les détails du dérangement',
+          onPress: () => {
+            this.props.history.push('/InfoDerang', {
+              titre: this.props.location.state.titre,
+            });
+          },
         },
       ],
     );
@@ -65,12 +76,6 @@ export default class LocaliserPc extends Component {
       (position) => {
         //stringify: is how to vue an object as a string
         console.log(JSON.stringify(position));
-        let initialPosition = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          latitudeDelta: 1.09,
-          longitudeDelta: 1.035,
-        };
         this.setState({
           latitudeCurrent: position.coords.latitude,
           longitudeCurrent: position.coords.longitude,
@@ -82,7 +87,7 @@ export default class LocaliserPc extends Component {
   };
   /*----------compountDidMount--------------------- */
   componentDidMount = () => {
-    // this.requestLocationPermission();
+    this.requestLocationPermission();
     fetch(
       'http://172.20.10.11:5000/pc/localiserPc/mob/' +
         this.props.location.state.tete +
@@ -130,10 +135,8 @@ export default class LocaliserPc extends Component {
           style={styles.map}
           ref={(map) => (this._map = map)}
           initialRegion={{
-            /*   latitude: this.state.latitudeCurrent,
-          longitude: this.state.longitudeCurrent, */
-            latitude: 36.7163409,
-            longitude: 3.1630631,
+            latitude: this.state.latitudeCurrent,
+            longitude: this.state.longitudeCurrent,
             latitudeDelta: 0.09,
             longitudeDelta: 0.035,
           }}
@@ -141,10 +144,8 @@ export default class LocaliserPc extends Component {
         >
           <MapView.Marker
             coordinate={{
-              latitude: 36.7163409,
-              longitude: 3.1630631,
-              /*  latitude: this.props.location.state.latitude,
-            longitude: this.props.location.state.longitude, */
+              latitude: this.state.latitudeCurrent,
+              longitude: this.state.longitudeCurrent,
             }}
           />
 
@@ -156,10 +157,8 @@ export default class LocaliserPc extends Component {
           />
           <MapViewDirections
             origin={{
-              /*   latitude: this.state.latitudeCurrent,
-            longitude: this.state.longitudeCurrent, */
-              latitude: 36.7163409,
-              longitude: 3.1630631,
+              latitude: this.state.latitudeCurrent,
+              longitude: this.state.longitudeCurrent,
             }}
             destination={{
               latitude: this.state.latitudeDes,

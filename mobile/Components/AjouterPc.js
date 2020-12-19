@@ -17,8 +17,6 @@ export default class AjouterPc extends Component {
       tete: '',
       pair1: [],
       pair2: [],
-      pair3: [],
-      pair4: [],
       groupe: 0,
       amorce: 0,
       latitude: 0,
@@ -37,8 +35,8 @@ export default class AjouterPc extends Component {
     ) {
       Alert.alert('Error', 'veuillez remplir tous les champs');
     } else {
-      if (this.state.nbrPairMax != 28 && this.state.nbrPairMax != 14) {
-        Alert.alert('Error', 'le nombre maximum de pair doit être 14 ou 28');
+      if (this.state.nbrPairMax != 7 && this.state.nbrPairMax != 14) {
+        Alert.alert('Error', 'le nombre maximum de pair doit être 07 ou 14');
       } else {
         Alert.alert(
           'Confirmation',
@@ -50,15 +48,10 @@ export default class AjouterPc extends Component {
                 for (var i = 0; i < 7; i++) {
                   this.setState({pair1: [...this.state.pair1, 0]});
                 }
-                for (var i = 0; i < 7; i++) {
-                  this.setState({pair2: [...this.state.pair2, 0]});
-                }
-                if (this.state.nbrPairMax > 14) {
+
+                if (this.state.nbrPairMax == 14) {
                   for (var i = 0; i < 7; i++) {
-                    this.setState({pair3: [...this.state.pair3, 0]});
-                  }
-                  for (var i = 0; i < 7; i++) {
-                    this.setState({pair4: [...this.state.pair4, 0]});
+                    this.setState({pair2: [...this.state.pair2, 0]});
                   }
                 }
                 this.requestLocationPermission();
@@ -111,8 +104,6 @@ export default class AjouterPc extends Component {
           nbrPairMax: this.state.nbrPairMax,
           pair1: this.state.pair1,
           pair2: this.state.pair2,
-          pair3: this.state.pair3,
-          pair4: this.state.pair4,
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
           compte: this.props.location.state.compte,
@@ -159,7 +150,7 @@ export default class AjouterPc extends Component {
           />
           <TextInput
             style={styles.input}
-            placeholder="Le nombre max de pair (14 ou 28)"
+            placeholder="Le nombre max de pair (07 ou 14)"
             keyboardType="numeric"
             onChangeText={(text) => this.setState({nbrPairMax: text})}
           />

@@ -15,12 +15,8 @@ export default class checkbx extends Component {
     this.state = {
       pair1: this.props.location.state.pair1,
       pair2: this.props.location.state.pair2,
-      pair3: this.props.location.state.pair3,
-      pair4: this.props.location.state.pair4,
       checked1: [false, false, false, false, false, false, false],
       checked2: [false, false, false, false, false, false, false],
-      checked3: [false, false, false, false, false, false, false],
-      checked4: [false, false, false, false, false, false, false],
       tete: this.props.location.state.tete,
       groupe: this.props.location.state.groupe,
       amorce: this.props.location.state.amorce,
@@ -34,9 +30,7 @@ export default class checkbx extends Component {
   /////////////////////////////////////::
   enregistrer = () => {
     //concatener les tableau de pair dans a
-    let a = this.state.pair1.concat(
-      this.state.pair2.concat(this.state.pair3.concat(this.state.pair4)),
-    );
+    let a = this.state.pair1.concat(this.state.pair2);
     console.log(a);
     // this.setState({pair: [...a]});
     //get current position
@@ -74,7 +68,7 @@ export default class checkbx extends Component {
   ///////////////////////////////////////////
 
   render() {
-    if (this.state.nbrPairMax === 14) {
+    if (this.state.nbrPairMax === 7) {
       return (
         <View style={{backgroundColor: '#F8F8F8', height: '100%'}}>
           <View style={styles.header}>
@@ -102,7 +96,6 @@ export default class checkbx extends Component {
                   top: '10%',
                   backgroundColor: '#fff',
                   borderColor: 'transparent',
-                  left: '-10%',
                 }}
                 checked={this.state.checked1[key]}
                 checkedColor="#27B8B8"
@@ -126,41 +119,6 @@ export default class checkbx extends Component {
                   let b = [...this.state.pair1];
                   b[key] = 1;
                   this.setState({pair1: [...b]});
-                }}
-              />
-            ))}
-
-            {this.state.pair2.map((item, key) => (
-              <CheckBox
-                containerStyle={{
-                  //top: '-65.5%',
-                  marginTop: 1000,
-                  backgroundColor: '#fff',
-                  borderColor: 'transparent',
-                  left: '15%',
-                }}
-                checked={this.state.checked2[key]}
-                checkedColor="#27B8B8"
-                key={key}
-                title={(key + 8).toString()}
-                onPress={() => {
-                  let c = [...this.state.checked2];
-                  c[key] = !this.state.checked2[key];
-                  if (this.state.checked2[key]) {
-                    this.setState({
-                      nbrPairOccupe:
-                        parseFloat(this.state.nbrPairOccupe) - parseFloat(1),
-                    });
-                  } else {
-                    this.setState({
-                      nbrPairOccupe:
-                        parseFloat(this.state.nbrPairOccupe) + parseFloat(1),
-                    });
-                  }
-                  this.setState({checked2: c});
-                  let d = [...this.state.pair2];
-                  d[key] = 1;
-                  this.setState({pair2: [...d]});
                 }}
               />
             ))}
@@ -255,76 +213,6 @@ export default class checkbx extends Component {
                   let d = [...this.state.pair2];
                   d[key] = 1;
                   this.setState({pair2: [...d]});
-                }}
-              />
-            ))}
-
-            {this.state.pair3.map((item, key) => (
-              <CheckBox
-                containerStyle={{
-                  top: '-141%',
-                  backgroundColor: '#fff',
-                  borderColor: 'transparent',
-                  left: '10%',
-                }}
-                checked={this.state.checked3[key]}
-                checkedColor="#27B8B8"
-                key={key}
-                color="#27B8B8"
-                title={(key + 15).toString()}
-                onPress={() => {
-                  let e = [...this.state.checked3];
-                  e[key] = !this.state.checked3[key];
-                  if (this.state.checked3[key]) {
-                    this.setState({
-                      nbrPairOccupe:
-                        parseFloat(this.state.nbrPairOccupe) - parseFloat(1),
-                    });
-                  } else {
-                    this.setState({
-                      nbrPairOccupe:
-                        parseFloat(this.state.nbrPairOccupe) + parseFloat(1),
-                    });
-                  }
-                  this.setState({checked3: e});
-                  let f = [...this.state.pair3];
-                  f[key] = 1;
-                  this.setState({pair3: [...f]});
-                }}
-              />
-            ))}
-
-            {this.state.pair4.map((item, key) => (
-              <CheckBox
-                containerStyle={{
-                  top: '-217%',
-                  backgroundColor: '#fff',
-                  borderColor: 'transparent',
-                  left: '35%',
-                }}
-                checked={this.state.checked4[key]}
-                checkedColor="#27B8B8"
-                key={key}
-                color="#27B8B8"
-                title={(key + 22).toString()}
-                onPress={() => {
-                  let g = [...this.state.checked4];
-                  g[key] = !this.state.checked4[key];
-                  if (this.state.checked4[key]) {
-                    this.setState({
-                      nbrPairOccupe:
-                        parseFloat(this.state.nbrPairOccupe) - parseFloat(1),
-                    });
-                  } else {
-                    this.setState({
-                      nbrPairOccupe:
-                        parseFloat(this.state.nbrPairOccupe) + parseFloat(1),
-                    });
-                  }
-                  this.setState({checked4: g});
-                  let h = [...this.state.pair4];
-                  h[key] = 1;
-                  this.setState({pair4: [...h]});
                 }}
               />
             ))}

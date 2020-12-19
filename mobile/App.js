@@ -11,17 +11,18 @@ import ChangerEtatDer from './Components/ChangerEtatDer';
 import Checkbx from './Components/Checkbx';
 import {Route, Switch, NativeRouter} from 'react-router-native';
 import LocaliserPc from './Components/LocaliserPc';
+import SplashScreen from './Components/SplashScreen';
 
 export default class App extends Component {
   render() {
     return (
       <NativeRouter>
         <Switch>
-          {/*  <Route exact path="/" component={LocaliserPc} /> */}
+          <Route exact path="/" component={SplashScreen} />
           <Route exact path="/ChangerEtatDer" component={ChangerEtatDer} />
           <Route exact path="/LocaliserPc" component={LocaliserPc} />
           <Route exact path="/ajoutPair" component={Checkbx} />
-          <Route exact path="/" component={Login} />
+          <Route exact path="/Login" component={Login} />
           <Route exact path="/ListDerang" component={ListDerang} />
           <Route exact path="/EtatPc" component={EtatPc} />
           <Route exact path="/AjouterPc" component={AjouterPc} />
